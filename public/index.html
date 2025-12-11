@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Database Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>College Database Management System</h1>
+            <p>Manage your college data efficiently</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="departments">Departments</button>
+            <button class="tab-btn" data-tab="department-heads">Department Heads</button>
+            <button class="tab-btn" data-tab="instructors">Instructors</button>
+            <button class="tab-btn" data-tab="courses">Courses</button>
+            <button class="tab-btn" data-tab="students">Students</button>
+            <button class="tab-btn" data-tab="enrollments">Enrollments</button>
+            <button class="tab-btn" data-tab="student-history">Student History</button>
+        </nav>
+
+        <!-- Departments Tab -->
+        <div id="departments" class="tab-content active">
+            <div class="section-header">
+                <h2>Departments</h2>
+                <button class="btn btn-primary" onclick="showAddForm('departments')">Add Department</button>
+            </div>
+            <div id="departments-form" class="form-container" style="display: none;">
+                <h3 id="departments-form-title">Add Department</h3>
+                <form id="department-form">
+                    <input type="hidden" id="department-id">
+                    <div class="form-group">
+                        <label>Department Name:</label>
+                        <input type="text" id="department-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Building:</label>
+                        <input type="text" id="department-building">
+                    </div>
+                    <div class="form-group">
+                        <label>Budget:</label>
+                        <input type="number" step="0.01" id="department-budget">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelForm('departments')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div id="departments-table-container" class="table-container">
+                <table id="departments-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Building</th>
+                            <th>Budget</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Department Heads Tab -->
+        <div id="department-heads" class="tab-content">
+            <div class="section-header">
+                <h2>Department Heads</h2>
+                <button class="btn btn-primary" onclick="showAddForm('department-heads')">Add Department Head</button>
+            </div>
+            <div id="department-heads-form" class="form-container" style="display: none;">
+                <h3 id="department-heads-form-title">Add Department Head</h3>
+                <form id="department-head-form">
+                    <input type="hidden" id="head-id">
+                    <div class="form-group">
+                        <label>Department:</label>
+                        <select id="head-department-id" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>First Name:</label>
+                        <input type="text" id="head-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        <input type="text" id="head-last-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="head-email">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="tel" id="head-phone">
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date:</label>
+                        <input type="date" id="head-start-date">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelForm('department-heads')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div id="department-heads-table-container" class="table-container">
+                <table id="department-heads-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Department</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Start Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Instructors Tab -->
+        <div id="instructors" class="tab-content">
+            <div class="section-header">
+                <h2>Instructors</h2>
+                <button class="btn btn-primary" onclick="showAddForm('instructors')">Add Instructor</button>
+            </div>
+            <div id="instructors-form" class="form-container" style="display: none;">
+                <h3 id="instructors-form-title">Add Instructor</h3>
+                <form id="instructor-form">
+                    <input type="hidden" id="instructor-id">
+                    <div class="form-group">
+                        <label>Department:</label>
+                        <select id="instructor-department-id"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>First Name:</label>
+                        <input type="text" id="instructor-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        <input type="text" id="instructor-last-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="instructor-email">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="tel" id="instructor-phone">
+                    </div>
+                    <div class="form-group">
+                        <label>Hire Date:</label>
+                        <input type="date" id="instructor-hire-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Salary:</label>
+                        <input type="number" step="0.01" id="instructor-salary">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelForm('instructors')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div id="instructors-table-container" class="table-container">
+                <table id="instructors-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Department</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Hire Date</th>
+                            <th>Salary</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Courses Tab -->
+        <div id="courses" class="tab-content">
+            <div class="section-header">
+                <h2>Courses</h2>
+                <button class="btn btn-primary" onclick="showAddForm('courses')">Add Course</button>
+            </div>
+            <div id="courses-form" class="form-container" style="display: none;">
+                <h3 id="courses-form-title">Add Course</h3>
+                <form id="course-form">
+                    <input type="hidden" id="course-id">
+                    <div class="form-group">
+                        <label>Course Code:</label>
+                        <input type="text" id="course-code" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Course Name:</label>
+                        <input type="text" id="course-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Department:</label>
+                        <select id="course-department-id"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Instructor:</label>
+                        <select id="course-instructor-id"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Credits:</label>
+                        <input type="number" id="course-credits">
+                    </div>
+                    <div class="form-group">
+                        <label>Semester:</label>
+                        <select id="course-semester">
+                            <option value="">Select Semester</option>
+                            <option value="Fall">Fall</option>
+                            <option value="Spring">Spring</option>
+                            <option value="Summer">Summer</option>
+                            <option value="Winter">Winter</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Year:</label>
+                        <input type="number" id="course-year">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelForm('courses')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div id="courses-table-container" class="table-container">
+                <table id="courses-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Instructor</th>
+                            <th>Credits</th>
+                            <th>Semester</th>
+                            <th>Year</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Students Tab -->
+        <div id="students" class="tab-content">
+            <div class="section-header">
+                <h2>Students</h2>
+                <button class="btn btn-primary" onclick="showAddForm('students')">Add Student</button>
+            </div>
+            <div id="students-form" class="form-container" style="display: none;">
+                <h3 id="students-form-title">Add Student</h3>
+                <form id="student-form">
+                    <input type="hidden" id="student-id">
+                    <div class="form-group">
+                        <label>First Name:</label>
+                        <input type="text" id="student-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name:</label>
+                        <input type="text" id="student-last-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="student-email">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="tel" id="student-phone">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth:</label>
+                        <input type="date" id="student-dob">
+                    </div>
+                    <div class="form-group">
+                        <label>Enrollment Date:</label>
+                        <input type="date" id="student-enrollment-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Major:</label>
+                        <select id="student-major-id"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>GPA:</label>
+                        <input type="number" step="0.01" min="0" max="4" id="student-gpa">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelForm('students')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div id="students-table-container" class="table-container">
+                <table id="students-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>DOB</th>
+                            <th>Enrollment Date</th>
+                            <th>Major</th>
+                            <th>GPA</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Enrollments Tab -->
+        <div id="enrollments" class="tab-content">
+            <div class="section-header">
+                <h2>Enrollments</h2>
+                <button class="btn btn-primary" onclick="showAddForm('enrollments')">Add Enrollment</button>
+            </div>
+            <div id="enrollments-form" class="form-container" style="display: none;">
+                <h3 id="enrollments-form-title">Add Enrollment</h3>
+                <form id="enrollment-form">
+                    <input type="hidden" id="enrollment-id">
+                    <div class="form-group">
+                        <label>Student:</label>
+                        <select id="enrollment-student-id" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Course:</label>
+                        <select id="enrollment-course-id" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Enrollment Date:</label>
+                        <input type="date" id="enrollment-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Grade:</label>
+                        <input type="text" id="enrollment-grade" maxlength="2">
+                    </div>
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <select id="enrollment-status">
+                            <option value="Enrolled">Enrolled</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Dropped">Dropped</option>
+                            <option value="Withdrawn">Withdrawn</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelForm('enrollments')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div id="enrollments-table-container" class="table-container">
+                <table id="enrollments-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student</th>
+                            <th>Course</th>
+                            <th>Enrollment Date</th>
+                            <th>Grade</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Student History Tab -->
+        <div id="student-history" class="tab-content">
+            <div class="section-header">
+                <h2>Student History</h2>
+                <button class="btn btn-primary" onclick="showAddForm('student-history')">Add History Record</button>
+            </div>
+            <div id="student-history-form" class="form-container" style="display: none;">
+                <h3 id="student-history-form-title">Add History Record</h3>
+                <form id="history-form">
+                    <input type="hidden" id="history-id">
+                    <div class="form-group">
+                        <label>Student:</label>
+                        <select id="history-student-id" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Semester:</label>
+                        <select id="history-semester">
+                            <option value="">Select Semester</option>
+                            <option value="Fall">Fall</option>
+                            <option value="Spring">Spring</option>
+                            <option value="Summer">Summer</option>
+                            <option value="Winter">Winter</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Year:</label>
+                        <input type="number" id="history-year">
+                    </div>
+                    <div class="form-group">
+                        <label>GPA:</label>
+                        <input type="number" step="0.01" min="0" max="4" id="history-gpa">
+                    </div>
+                    <div class="form-group">
+                        <label>Credits Earned:</label>
+                        <input type="number" id="history-credits">
+                    </div>
+                    <div class="form-group">
+                        <label>Notes:</label>
+                        <textarea id="history-notes" rows="3"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary" onclick="cancelForm('student-history')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+            <div id="student-history-table-container" class="table-container">
+                <table id="student-history-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student</th>
+                            <th>Semester</th>
+                            <th>Year</th>
+                            <th>GPA</th>
+                            <th>Credits</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
