@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Get all departments
 app.get('/api/departments', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT * FROM departments ORDER BY department_id');
+        const [rows] = await db.query('SELECT * FROM Departments ORDER BY department_id');
         res.json(rows);
     } catch (error) {
         console.error('Error loading departments:', error);
@@ -40,7 +40,7 @@ app.get('/api/departments', async (req, res) => {
 // Get single department
 app.get('/api/departments/:id', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT * FROM departments WHERE department_id = ?', [req.params.id]);
+        const [rows] = await db.query('SELECT * FROM Departments WHERE department_id = ?', [req.params.id]);
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Department not found' });
         }
@@ -61,7 +61,7 @@ app.post('/api/departments', async (req, res) => {
         }
         
         const [result] = await db.query(
-            'INSERT INTO departments (department_name, building, budget) VALUES (?, ?, ?)',
+            'INSERT INTO Departments (department_name, building, budget) VALUES (?, ?, ?)',
             [department_name.trim(), building, budget]
         );
         res.status(201).json({ id: result.insertId, message: 'Department created successfully' });
@@ -76,7 +76,7 @@ app.put('/api/departments/:id', async (req, res) => {
     try {
         const { department_name, building, budget } = req.body;
         const [result] = await db.query(
-            'UPDATE departments SET department_name = ?, building = ?, budget = ? WHERE department_id = ?',
+            'UPDATE Departments SET department_name = ?, building = ?, budget = ? WHERE department_id = ?',
             [department_name, building, budget, req.params.id]
         );
         if (result.affectedRows === 0) {
@@ -91,7 +91,7 @@ app.put('/api/departments/:id', async (req, res) => {
 // Delete department
 app.delete('/api/departments/:id', async (req, res) => {
     try {
-        const [result] = await db.query('DELETE FROM departments WHERE department_id = ?', [req.params.id]);
+        const [result] = await db.query('DELETE FROM Departments WHERE department_id = ?', [req.params.id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Department not found' });
         }
@@ -110,8 +110,8 @@ app.get('/api/departmentheads', async (req, res) => {
     try {
         const [rows] = await db.query(`
             SELECT dh.*, d.department_name 
-            FROM departmentheads dh
-            LEFT JOIN departments d ON dh.department_id = d.department_id
+            FROM DepartmentHeads dh
+            LEFT JOIN Departments d ON dh.department_id = d.department_id
             ORDER BY dh.head_id
         `);
         res.json(rows);
@@ -125,8 +125,8 @@ app.get('/api/departmentheads/:id', async (req, res) => {
     try {
         const [rows] = await db.query(`
             SELECT dh.*, d.department_name 
-            FROM departmentheads dh
-            LEFT JOIN departments d ON dh.department_id = d.department_id
+            FROM DepartmentHeads dh
+            LEFT JOIN Departments d ON dh.department_id = d.department_id
             WHERE dh.head_id = ?
         `, [req.params.id]);
         if (rows.length === 0) {
@@ -149,7 +149,7 @@ app.post('/api/departmentheads', async (req, res) => {
         }
         
         const [result] = await db.query(
-            'INSERT INTO departmentheads (department_id, first_name, last_name, email, phone, start_date) VALUES (?, ?, ?, ?, ?, ?)',
+            'INSERT INTO DepartmentHeads (department_id, first_name, last_name, email, phone, start_date) VALUES (?, ?, ?, ?, ?, ?)',
             [department_id, first_name.trim(), last_name.trim(), email, phone, start_date]
         );
         res.status(201).json({ id: result.insertId, message: 'Department head created successfully' });
@@ -164,7 +164,7 @@ app.put('/api/departmentheads/:id', async (req, res) => {
     try {
         const { department_id, first_name, last_name, email, phone, start_date } = req.body;
         const [result] = await db.query(
-            'UPDATE departmentheads SET department_id = ?, first_name = ?, last_name = ?, email = ?, phone = ?, start_date = ? WHERE head_id = ?',
+            'UPDATE DepartmentHeads SET department_id = ?, first_name = ?, last_name = ?, email = ?, phone = ?, start_date = ? WHERE head_id = ?',
             [department_id, first_name, last_name, email, phone, start_date, req.params.id]
         );
         if (result.affectedRows === 0) {
@@ -179,7 +179,7 @@ app.put('/api/departmentheads/:id', async (req, res) => {
 // Delete department head
 app.delete('/api/departmentheads/:id', async (req, res) => {
     try {
-        const [result] = await db.query('DELETE FROM departmentheads WHERE head_id = ?', [req.params.id]);
+        const [result] = await db.query('DELETE FROM DepartmentHeads WHERE head_id = ?', [req.params.id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Department head not found' });
         }
@@ -198,8 +198,8 @@ app.get('/api/instructors', async (req, res) => {
     try {
         const [rows] = await db.query(`
             SELECT i.*, d.department_name 
-            FROM instructors i
-            LEFT JOIN departments d ON i.department_id = d.department_id
+            FROM Instructors i
+            LEFT JOIN Departments d ON i.department_id = d.department_id
             ORDER BY i.instructor_id
         `);
         res.json(rows);
@@ -213,8 +213,8 @@ app.get('/api/instructors/:id', async (req, res) => {
     try {
         const [rows] = await db.query(`
             SELECT i.*, d.department_name 
-            FROM instructors i
-            LEFT JOIN departments d ON i.department_id = d.department_id
+            FROM Instructors i
+            LEFT JOIN Departments d ON i.department_id = d.department_id
             WHERE i.instructor_id = ?
         `, [req.params.id]);
         if (rows.length === 0) {
@@ -237,7 +237,7 @@ app.post('/api/instructors', async (req, res) => {
         }
         
         const [result] = await db.query(
-            'INSERT INTO instructors (department_id, first_name, last_name, email, phone, hire_date, salary) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO Instructors (department_id, first_name, last_name, email, phone, hire_date, salary) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [department_id, first_name.trim(), last_name.trim(), email, phone, hire_date, salary]
         );
         res.status(201).json({ id: result.insertId, message: 'Instructor created successfully' });
@@ -252,7 +252,7 @@ app.put('/api/instructors/:id', async (req, res) => {
     try {
         const { department_id, first_name, last_name, email, phone, hire_date, salary } = req.body;
         const [result] = await db.query(
-            'UPDATE instructors SET department_id = ?, first_name = ?, last_name = ?, email = ?, phone = ?, hire_date = ?, salary = ? WHERE instructor_id = ?',
+            'UPDATE Instructors SET department_id = ?, first_name = ?, last_name = ?, email = ?, phone = ?, hire_date = ?, salary = ? WHERE instructor_id = ?',
             [department_id, first_name, last_name, email, phone, hire_date, salary, req.params.id]
         );
         if (result.affectedRows === 0) {
@@ -267,7 +267,7 @@ app.put('/api/instructors/:id', async (req, res) => {
 // Delete instructor
 app.delete('/api/instructors/:id', async (req, res) => {
     try {
-        const [result] = await db.query('DELETE FROM instructors WHERE instructor_id = ?', [req.params.id]);
+        const [result] = await db.query('DELETE FROM Instructors WHERE instructor_id = ?', [req.params.id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Instructor not found' });
         }
@@ -287,9 +287,9 @@ app.get('/api/courses', async (req, res) => {
         const [rows] = await db.query(`
             SELECT c.*, d.department_name, 
                    CONCAT(i.first_name, ' ', i.last_name) as instructor_name
-            FROM courses c
-            LEFT JOIN departments d ON c.department_id = d.department_id
-            LEFT JOIN instructors i ON c.instructor_id = i.instructor_id
+            FROM Courses c
+            LEFT JOIN Departments d ON c.department_id = d.department_id
+            LEFT JOIN Instructors i ON c.instructor_id = i.instructor_id
             ORDER BY c.course_id
         `);
         res.json(rows);
@@ -304,9 +304,9 @@ app.get('/api/courses/:id', async (req, res) => {
         const [rows] = await db.query(`
             SELECT c.*, d.department_name, 
                    CONCAT(i.first_name, ' ', i.last_name) as instructor_name
-            FROM courses c
-            LEFT JOIN departments d ON c.department_id = d.department_id
-            LEFT JOIN instructors i ON c.instructor_id = i.instructor_id
+            FROM Courses c
+            LEFT JOIN Departments d ON c.department_id = d.department_id
+            LEFT JOIN Instructors i ON c.instructor_id = i.instructor_id
             WHERE c.course_id = ?
         `, [req.params.id]);
         if (rows.length === 0) {
@@ -329,7 +329,7 @@ app.post('/api/courses', async (req, res) => {
         }
         
         const [result] = await db.query(
-            'INSERT INTO courses (course_code, course_name, department_id, instructor_id, credits, semester, year) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO Courses (course_code, course_name, department_id, instructor_id, credits, semester, year) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [course_code.trim(), course_name.trim(), department_id, instructor_id, credits, semester, year]
         );
         res.status(201).json({ id: result.insertId, message: 'Course created successfully' });
@@ -344,7 +344,7 @@ app.put('/api/courses/:id', async (req, res) => {
     try {
         const { course_code, course_name, department_id, instructor_id, credits, semester, year } = req.body;
         const [result] = await db.query(
-            'UPDATE courses SET course_code = ?, course_name = ?, department_id = ?, instructor_id = ?, credits = ?, semester = ?, year = ? WHERE course_id = ?',
+            'UPDATE Courses SET course_code = ?, course_name = ?, department_id = ?, instructor_id = ?, credits = ?, semester = ?, year = ? WHERE course_id = ?',
             [course_code, course_name, department_id, instructor_id, credits, semester, year, req.params.id]
         );
         if (result.affectedRows === 0) {
@@ -359,7 +359,7 @@ app.put('/api/courses/:id', async (req, res) => {
 // Delete course
 app.delete('/api/courses/:id', async (req, res) => {
     try {
-        const [result] = await db.query('DELETE FROM courses WHERE course_id = ?', [req.params.id]);
+        const [result] = await db.query('DELETE FROM Courses WHERE course_id = ?', [req.params.id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Course not found' });
         }
@@ -378,8 +378,8 @@ app.get('/api/students', async (req, res) => {
     try {
         const [rows] = await db.query(`
             SELECT s.*, d.department_name as major_name
-            FROM students s
-            LEFT JOIN departments d ON s.major_department_id = d.department_id
+            FROM Students s
+            LEFT JOIN Departments d ON s.major_department_id = d.department_id
             ORDER BY s.student_id
         `);
         res.json(rows);
@@ -393,8 +393,8 @@ app.get('/api/students/:id', async (req, res) => {
     try {
         const [rows] = await db.query(`
             SELECT s.*, d.department_name as major_name
-            FROM students s
-            LEFT JOIN departments d ON s.major_department_id = d.department_id
+            FROM Students s
+            LEFT JOIN Departments d ON s.major_department_id = d.department_id
             WHERE s.student_id = ?
         `, [req.params.id]);
         if (rows.length === 0) {
@@ -417,7 +417,7 @@ app.post('/api/students', async (req, res) => {
         }
         
         const [result] = await db.query(
-            'INSERT INTO students (first_name, last_name, email, phone, date_of_birth, enrollment_date, major_department_id, gpa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO Students (first_name, last_name, email, phone, date_of_birth, enrollment_date, major_department_id, gpa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [first_name.trim(), last_name.trim(), email, phone, date_of_birth, enrollment_date, major_department_id, gpa]
         );
         res.status(201).json({ id: result.insertId, message: 'Student created successfully' });
@@ -432,7 +432,7 @@ app.put('/api/students/:id', async (req, res) => {
     try {
         const { first_name, last_name, email, phone, date_of_birth, enrollment_date, major_department_id, gpa } = req.body;
         const [result] = await db.query(
-            'UPDATE students SET first_name = ?, last_name = ?, email = ?, phone = ?, date_of_birth = ?, enrollment_date = ?, major_department_id = ?, gpa = ? WHERE student_id = ?',
+            'UPDATE Students SET first_name = ?, last_name = ?, email = ?, phone = ?, date_of_birth = ?, enrollment_date = ?, major_department_id = ?, gpa = ? WHERE student_id = ?',
             [first_name, last_name, email, phone, date_of_birth, enrollment_date, major_department_id, gpa, req.params.id]
         );
         if (result.affectedRows === 0) {
@@ -447,7 +447,7 @@ app.put('/api/students/:id', async (req, res) => {
 // Delete student
 app.delete('/api/students/:id', async (req, res) => {
     try {
-        const [result] = await db.query('DELETE FROM students WHERE student_id = ?', [req.params.id]);
+        const [result] = await db.query('DELETE FROM Students WHERE student_id = ?', [req.params.id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Student not found' });
         }
@@ -468,9 +468,9 @@ app.get('/api/enrollments', async (req, res) => {
             SELECT e.*, 
                    CONCAT(s.first_name, ' ', s.last_name) as student_name,
                    c.course_code, c.course_name
-            FROM enrollments e
-            LEFT JOIN students s ON e.student_id = s.student_id
-            LEFT JOIN courses c ON e.course_id = c.course_id
+            FROM Enrollments e
+            LEFT JOIN Students s ON e.student_id = s.student_id
+            LEFT JOIN Courses c ON e.course_id = c.course_id
             ORDER BY e.enrollment_id
         `);
         res.json(rows);
@@ -486,9 +486,9 @@ app.get('/api/enrollments/:id', async (req, res) => {
             SELECT e.*, 
                    CONCAT(s.first_name, ' ', s.last_name) as student_name,
                    c.course_code, c.course_name
-            FROM enrollments e
-            LEFT JOIN students s ON e.student_id = s.student_id
-            LEFT JOIN courses c ON e.course_id = c.course_id
+            FROM Enrollments e
+            LEFT JOIN Students s ON e.student_id = s.student_id
+            LEFT JOIN Courses c ON e.course_id = c.course_id
             WHERE e.enrollment_id = ?
         `, [req.params.id]);
         if (rows.length === 0) {
@@ -505,7 +505,7 @@ app.post('/api/enrollments', async (req, res) => {
     try {
         const { student_id, course_id, enrollment_date, grade, status } = req.body;
         const [result] = await db.query(
-            'INSERT INTO enrollments (student_id, course_id, enrollment_date, grade, status) VALUES (?, ?, ?, ?, ?)',
+            'INSERT INTO Enrollments (student_id, course_id, enrollment_date, grade, status) VALUES (?, ?, ?, ?, ?)',
             [student_id, course_id, enrollment_date, grade, status]
         );
         res.status(201).json({ id: result.insertId, message: 'Enrollment created successfully' });
@@ -519,7 +519,7 @@ app.put('/api/enrollments/:id', async (req, res) => {
     try {
         const { student_id, course_id, enrollment_date, grade, status } = req.body;
         const [result] = await db.query(
-            'UPDATE enrollments SET student_id = ?, course_id = ?, enrollment_date = ?, grade = ?, status = ? WHERE enrollment_id = ?',
+            'UPDATE Enrollments SET student_id = ?, course_id = ?, enrollment_date = ?, grade = ?, status = ? WHERE enrollment_id = ?',
             [student_id, course_id, enrollment_date, grade, status, req.params.id]
         );
         if (result.affectedRows === 0) {
@@ -534,7 +534,7 @@ app.put('/api/enrollments/:id', async (req, res) => {
 // Delete enrollment
 app.delete('/api/enrollments/:id', async (req, res) => {
     try {
-        const [result] = await db.query('DELETE FROM enrollments WHERE enrollment_id = ?', [req.params.id]);
+        const [result] = await db.query('DELETE FROM Enrollments WHERE enrollment_id = ?', [req.params.id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Enrollment not found' });
         }
@@ -554,8 +554,8 @@ app.get('/api/studenthistory', async (req, res) => {
         const [rows] = await db.query(`
             SELECT sh.*, 
                    CONCAT(s.first_name, ' ', s.last_name) as student_name
-            FROM studenthistory sh
-            LEFT JOIN students s ON sh.student_id = s.student_id
+            FROM StudentHistory sh
+            LEFT JOIN Students s ON sh.student_id = s.student_id
             ORDER BY sh.history_id
         `);
         res.json(rows);
@@ -570,8 +570,8 @@ app.get('/api/studenthistory/:id', async (req, res) => {
         const [rows] = await db.query(`
             SELECT sh.*, 
                    CONCAT(s.first_name, ' ', s.last_name) as student_name
-            FROM studenthistory sh
-            LEFT JOIN students s ON sh.student_id = s.student_id
+            FROM StudentHistory sh
+            LEFT JOIN Students s ON sh.student_id = s.student_id
             WHERE sh.history_id = ?
         `, [req.params.id]);
         if (rows.length === 0) {
@@ -588,7 +588,7 @@ app.post('/api/studenthistory', async (req, res) => {
     try {
         const { student_id, semester, year, gpa, credits_earned, notes } = req.body;
         const [result] = await db.query(
-            'INSERT INTO studenthistory (student_id, semester, year, gpa, credits_earned, notes) VALUES (?, ?, ?, ?, ?, ?)',
+            'INSERT INTO StudentHistory (student_id, semester, year, gpa, credits_earned, notes) VALUES (?, ?, ?, ?, ?, ?)',
             [student_id, semester, year, gpa, credits_earned, notes]
         );
         res.status(201).json({ id: result.insertId, message: 'Student history record created successfully' });
@@ -602,7 +602,7 @@ app.put('/api/studenthistory/:id', async (req, res) => {
     try {
         const { student_id, semester, year, gpa, credits_earned, notes } = req.body;
         const [result] = await db.query(
-            'UPDATE studenthistory SET student_id = ?, semester = ?, year = ?, gpa = ?, credits_earned = ?, notes = ? WHERE history_id = ?',
+            'UPDATE StudentHistory SET student_id = ?, semester = ?, year = ?, gpa = ?, credits_earned = ?, notes = ? WHERE history_id = ?',
             [student_id, semester, year, gpa, credits_earned, notes, req.params.id]
         );
         if (result.affectedRows === 0) {
@@ -617,7 +617,7 @@ app.put('/api/studenthistory/:id', async (req, res) => {
 // Delete student history record
 app.delete('/api/studenthistory/:id', async (req, res) => {
     try {
-        const [result] = await db.query('DELETE FROM studenthistory WHERE history_id = ?', [req.params.id]);
+        const [result] = await db.query('DELETE FROM StudentHistory WHERE history_id = ?', [req.params.id]);
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Student history record not found' });
         }

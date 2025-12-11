@@ -21,13 +21,13 @@ A simple and efficient web-based application for managing college database with 
 
 The system manages the following tables:
 
-1. **departments** - Academic departments with budget and building information
-2. **departmentheads** - Department heads with contact information
-3. **instructors** - Teaching staff with salary and hire date information
-4. **courses** - Course catalog with credits, semester, and year information
-5. **students** - Student records with GPA and enrollment information
-6. **enrollments** - Student course enrollments with grades and status
-7. **studenthistory** - Historical academic performance records
+1. **Departments** - Academic departments with budget and building information
+2. **DepartmentHeads** - Department heads with contact information
+3. **Instructors** - Teaching staff with salary and hire date information
+4. **Courses** - Course catalog with credits, semester, and year information
+5. **Students** - Student records with GPA and enrollment information
+6. **Enrollments** - Student course enrollments with grades and status
+7. **StudentHistory** - Historical academic performance records
 
 ## Prerequisites
 
