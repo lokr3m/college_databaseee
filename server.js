@@ -9,7 +9,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production' 
+        ? process.env.ALLOWED_ORIGINS?.split(',') || []
+        : '*',
+    optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -26,7 +32,8 @@ app.get('/api/departments', async (req, res) => {
         const [rows] = await db.query('SELECT * FROM departments ORDER BY department_id');
         res.json(rows);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error loading departments:', error);
+        res.status(500).json({ error: 'Failed to load departments' });
     }
 });
 
@@ -47,13 +54,20 @@ app.get('/api/departments/:id', async (req, res) => {
 app.post('/api/departments', async (req, res) => {
     try {
         const { department_name, building, budget } = req.body;
+        
+        // Validate required fields
+        if (!department_name || department_name.trim() === '') {
+            return res.status(400).json({ error: 'Department name is required' });
+        }
+        
         const [result] = await db.query(
             'INSERT INTO departments (department_name, building, budget) VALUES (?, ?, ?)',
-            [department_name, building, budget]
+            [department_name.trim(), building, budget]
         );
         res.status(201).json({ id: result.insertId, message: 'Department created successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error creating department:', error);
+        res.status(500).json({ error: 'Failed to create department' });
     }
 });
 
@@ -128,13 +142,20 @@ app.get('/api/departmentheads/:id', async (req, res) => {
 app.post('/api/departmentheads', async (req, res) => {
     try {
         const { department_id, first_name, last_name, email, phone, start_date } = req.body;
+        
+        // Validate required fields
+        if (!first_name || first_name.trim() === '' || !last_name || last_name.trim() === '') {
+            return res.status(400).json({ error: 'First name and last name are required' });
+        }
+        
         const [result] = await db.query(
             'INSERT INTO departmentheads (department_id, first_name, last_name, email, phone, start_date) VALUES (?, ?, ?, ?, ?, ?)',
-            [department_id, first_name, last_name, email, phone, start_date]
+            [department_id, first_name.trim(), last_name.trim(), email, phone, start_date]
         );
         res.status(201).json({ id: result.insertId, message: 'Department head created successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error creating department head:', error);
+        res.status(500).json({ error: 'Failed to create department head' });
     }
 });
 
@@ -209,13 +230,20 @@ app.get('/api/instructors/:id', async (req, res) => {
 app.post('/api/instructors', async (req, res) => {
     try {
         const { department_id, first_name, last_name, email, phone, hire_date, salary } = req.body;
+        
+        // Validate required fields
+        if (!first_name || first_name.trim() === '' || !last_name || last_name.trim() === '') {
+            return res.status(400).json({ error: 'First name and last name are required' });
+        }
+        
         const [result] = await db.query(
             'INSERT INTO instructors (department_id, first_name, last_name, email, phone, hire_date, salary) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [department_id, first_name, last_name, email, phone, hire_date, salary]
+            [department_id, first_name.trim(), last_name.trim(), email, phone, hire_date, salary]
         );
         res.status(201).json({ id: result.insertId, message: 'Instructor created successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error creating instructor:', error);
+        res.status(500).json({ error: 'Failed to create instructor' });
     }
 });
 
@@ -294,13 +322,20 @@ app.get('/api/courses/:id', async (req, res) => {
 app.post('/api/courses', async (req, res) => {
     try {
         const { course_code, course_name, department_id, instructor_id, credits, semester, year } = req.body;
+        
+        // Validate required fields
+        if (!course_code || course_code.trim() === '' || !course_name || course_name.trim() === '') {
+            return res.status(400).json({ error: 'Course code and course name are required' });
+        }
+        
         const [result] = await db.query(
             'INSERT INTO courses (course_code, course_name, department_id, instructor_id, credits, semester, year) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [course_code, course_name, department_id, instructor_id, credits, semester, year]
+            [course_code.trim(), course_name.trim(), department_id, instructor_id, credits, semester, year]
         );
         res.status(201).json({ id: result.insertId, message: 'Course created successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error creating course:', error);
+        res.status(500).json({ error: 'Failed to create course' });
     }
 });
 
@@ -375,13 +410,20 @@ app.get('/api/students/:id', async (req, res) => {
 app.post('/api/students', async (req, res) => {
     try {
         const { first_name, last_name, email, phone, date_of_birth, enrollment_date, major_department_id, gpa } = req.body;
+        
+        // Validate required fields
+        if (!first_name || first_name.trim() === '' || !last_name || last_name.trim() === '') {
+            return res.status(400).json({ error: 'First name and last name are required' });
+        }
+        
         const [result] = await db.query(
             'INSERT INTO students (first_name, last_name, email, phone, date_of_birth, enrollment_date, major_department_id, gpa) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [first_name, last_name, email, phone, date_of_birth, enrollment_date, major_department_id, gpa]
+            [first_name.trim(), last_name.trim(), email, phone, date_of_birth, enrollment_date, major_department_id, gpa]
         );
         res.status(201).json({ id: result.insertId, message: 'Student created successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error creating student:', error);
+        res.status(500).json({ error: 'Failed to create student' });
     }
 });
 

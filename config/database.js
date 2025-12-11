@@ -1,6 +1,11 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
+// Validate required environment variables
+if (!process.env.DB_PASSWORD) {
+    console.error('WARNING: DB_PASSWORD is not set in .env file. Using empty password for development only.');
+}
+
 // Create connection pool
 const pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
