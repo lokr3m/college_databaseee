@@ -206,6 +206,44 @@ The `schema.sql` file includes sample data for testing:
 - Run `npm install` to install all dependencies
 - Delete `node_modules` and `package-lock.json`, then run `npm install` again
 
+## Security Considerations
+
+This application is designed for **local development and educational purposes**. Before deploying to production, consider implementing the following security measures:
+
+### For Production Deployment
+
+1. **Rate Limiting**: Add rate limiting middleware (e.g., `express-rate-limit`) to prevent abuse:
+   ```bash
+   npm install express-rate-limit
+   ```
+   ```javascript
+   const rateLimit = require('express-rate-limit');
+   const limiter = rateLimit({
+     windowMs: 15 * 60 * 1000, // 15 minutes
+     max: 100 // limit each IP to 100 requests per windowMs
+   });
+   app.use('/api/', limiter);
+   ```
+
+2. **Authentication**: Implement user authentication and authorization
+3. **HTTPS**: Use SSL/TLS certificates for encrypted connections
+4. **Input Sanitization**: Add additional input sanitization to prevent SQL injection
+5. **Environment Variables**: Never commit `.env` file with real credentials
+6. **CORS**: Configure CORS to allow only trusted domains (already configurable via `.env`)
+7. **Database User**: Use a MySQL user with limited privileges instead of root
+8. **Password Validation**: Require strong passwords in the database configuration
+9. **Session Management**: Implement proper session handling for user authentication
+10. **Logging**: Add comprehensive logging for security auditing
+
+### Current Security Features
+
+- ✅ Input validation on required fields
+- ✅ Parameterized queries to prevent SQL injection
+- ✅ Generic error messages to avoid information leakage
+- ✅ Configurable CORS (production-ready)
+- ✅ Environment-based configuration
+- ✅ Password warning for empty database passwords
+
 ## License
 
 MIT
